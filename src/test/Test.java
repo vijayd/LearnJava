@@ -24,42 +24,29 @@ public class Test {
     }
     public static ArrayList<Integer> Merge(ArrayList<Integer> l1, ArrayList<Integer> l2) {
         ArrayList<Integer> ret = new ArrayList<Integer>();
-        int len = l1.size()+l2.size();
-        int pos1 = 0;
-        int pos2 = 0;
-        boolean l1end = false;
-        boolean l2end = false;
-        Integer j = new Integer(0);
-        Integer k = new Integer(0);
-        for (int i=0; i<len; i++){
-            if (!l1end)
-                j = l1.get(pos1);
-            if (!l2end)
-                k = l2.get(pos2);
-            
-            if (l1end) {
-                ret.add(k);
-                pos2++;
-                continue;
-            }
-            if (l2end) {
-                ret.add(j);
-                pos1++;
-                continue;
-            }
+        // ListIterator allows the iterator to move both forward and backward
+        //   using previous() and next()
+        ListIterator<Integer> it1 = l1.listIterator();
+        ListIterator<Integer> it2 = l2.listIterator();
+        while (it1.hasNext() && it2.hasNext() ) {
+            Integer j = it1.next();
+            Integer k = it2.next();
+               
             if (j.intValue() <= k.intValue()){
-                ret.add(j);
-                pos1++;
-                if (pos1 >= l1.size())
-                    l1end = true;
-            } else {
-                ret.add(k);
-                pos2++;
-                if (pos2 >= l2.size())
-                    l2end = true;
+               ret.add(j);
+               it2.previous(); //revert back to previous position
             }
+            else {
+                ret.add(k);
+                it1.previous(); //revert back to previous position
+            }
+        }   
+        while (it1.hasNext()) { 
+            ret.add(it1.next());
         }
-              
+        while (it2.hasNext()) {
+            ret.add(it2.next());
+        }
         return ret;
     }
     public static ArrayList<Integer> MergeSplit(ArrayList<Integer> l, int start, int end){
